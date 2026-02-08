@@ -1,0 +1,30 @@
+{
+  "name": "blocks-and-blades-launcher",
+  "version": "1.0.0",
+  "description": "the launcher of the blocks and blades minecraft server",
+  "homepage": "https://github.com/xItsSky/blocks-and-blades-launcher#readme",
+  "bugs": {
+    "url": "https://github.com/xItsSky/blocks-and-blades-launcher/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/xItsSky/blocks-and-blades-launcher.git"
+  },
+  "license": "MIT",
+  "author": "Emo Quentin",
+  "type": "commonjs",
+  "main": "dist/main/main.js",
+  "scripts": {
+    "build": "tsc && cp src/renderer/index.html dist/renderer/index.html",
+    "start": "npm run build && electron .",
+    "package": "npm run build && electron-builder"
+  },
+  "devDependencies": {
+    "electron": "^40.2.1",
+    "electron-builder": "^26.7.0",
+    "ts-loader": "^9.5.4",
+    "typescript": "^5.9.3",
+    "webpack": "^5.105.0",
+    "webpack-cli": "^6.0.1"
+  }
+}

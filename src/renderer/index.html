@@ -1,20 +1,140 @@
 <!DOCTYPE html>
-<html>
-  <head>
-    <meta charset="UTF-8" />
-    <title>Blocks and Blades Launcher</title>
-    <meta
-      http-equiv="Content-Security-Policy"
-      content="default-src 'self'; script-src 'self'"
-    />
-  </head>
-  <body>
-    <h1>Bienvenue sur le launcher Blocks and Blades !</h1>
-    <p>
-      Nous utilisons Node.js <span id="node-version"></span>, Chromium
-      <span id="chrome-version"></span>, et Electron
-      <span id="electron-version"></span>.
-    </p>
-    <script src="renderer.js"></script>
-  </body>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <meta http-equiv="Content-Security-Policy"
+        content="default-src 'self'; img-src 'self' data: https://minotar.net; style-src 'self' 'unsafe-inline'; script-src 'self';">
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Blocks & Blades — Connexion</title>
+  <link rel="stylesheet" href="styles/main.css">
+</head>
+
+<body>
+  <div class="stage">
+    <div class="bg" aria-hidden="true"></div>
+    <div class="vignette" aria-hidden="true"></div>
+    <div class="grain" aria-hidden="true"></div>
+
+    <div class="embers" aria-hidden="true">
+      <span class="ember" style="left:10%; top:92%; animation-duration:12s;"></span>
+      <span class="ember" style="left:22%; top:98%; animation-duration:10s; animation-delay:1s;"></span>
+      <span class="ember" style="left:38%; top:96%; animation-duration:14s; animation-delay:2s;"></span>
+      <span class="ember" style="left:56%; top:94%; animation-duration:11s; animation-delay:.5s;"></span>
+      <span class="ember" style="left:72%; top:97%; animation-duration:13s; animation-delay:1.4s;"></span>
+      <span class="ember" style="left:88%; top:95%; animation-duration:10.5s; animation-delay:2.6s;"></span>
+    </div>
+
+    <div class="ui">
+      <section class="brand" aria-label="Présentation">
+        <div class="sigil">
+          <div class="mark" aria-hidden="true"></div>
+          <div class="title">Blocks &amp; Blades</div>
+        </div>
+
+        <h1 class="hero" id="heroTitle">
+          Rejoins <span>Valdoryn</span>.
+        </h1>
+
+        <p class="tagline" id="heroTagline">
+          Choisi ta classe, nettoie les dongeons et affronte les boss qui se trouverons devant toi. Forges ta légende !
+        </p>
+
+        <div class="lore" aria-label="Caractéristiques">
+          <span class="chip" id="chipClasses">⚔️ Classes &amp; builds</span>
+          <span class="chip" id="chipDragons">🐉 Dragons &amp; boss</span>
+          <span class="chip" id="chipExploration">🗺️ Exploration</span>
+          <span class="chip" id="chipProgression">🛡️ Progression</span>
+        </div>
+      </section>
+
+      <aside class="panel" aria-label="Connexion">
+        <div class="panelHeader">
+          <div class="h">
+            <b>Portail du Voyageur</b>
+            <span>Connectez-vous pour rejoindre le serveur.</span>
+          </div>
+          <div class="serverPill" id="serverPill">...</div>
+          <button class="settingsBtn" id="btnOpenSettings" title="Réglages" type="button">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
+          </button>
+        </div>
+
+        <div class="panelBody">
+          <div id="userProfile" class="userProfile hidden">
+            <img id="userSkin" src="" alt="Skin" class="userSkin">
+            <div class="userInfo">
+              <span id="userName" class="userName">Voyageur</span>
+              <span class="userStatus">Prêt à forger votre destinée.</span>
+            </div>
+          </div>
+
+          <div class="authOptions">
+            <label class="checkboxContainer">
+              <input type="checkbox" id="rememberMe" checked>
+              <span class="checkmark"></span>
+              Se souvenir de moi
+            </label>
+          </div>
+
+          <button class="cta" id="btnLogin" type="button">
+            <span class="ctaInner">
+              <span class="ms" aria-hidden="true"></span>
+              Se connecter avec Microsoft
+            </span>
+          </button>
+        </div>
+      </aside>
+    </div>
+
+    <div class="setupBar" id="setupBar">
+      <div class="setupMessage" id="setupMessage">Initialisation...</div>
+      <div class="progressContainer">
+        <div class="progressBar" id="progressBar"></div>
+      </div>
+      <div class="setupPercent" id="setupPercent">0%</div>
+    </div>
+
+    <!-- Modal Réglages -->
+    <div id="settingsModal" class="modal hidden">
+      <div class="modalContent">
+        <div class="modalHeader">
+          <h2>Réglages</h2>
+          <button id="btnCloseSettings" class="closeBtn">&times;</button>
+        </div>
+        <div class="modalBody">
+          <div class="settingGroup">
+            <label>RAM Maximale</label>
+            <select id="maxRam">
+              <option value="2G">2 GB</option>
+              <option value="4G">4 GB</option>
+              <option value="6G">6 GB</option>
+              <option value="8G">8 GB</option>
+              <option value="12G">12 GB</option>
+              <option value="16G">16 GB</option>
+            </select>
+          </div>
+          <div class="settingGroup">
+            <label class="checkboxContainer">
+              <input type="checkbox" id="minimizeOnLaunch">
+              <span class="checkmark"></span>
+              Minimiser au lancement
+            </label>
+          </div>
+          <div class="settingGroup">
+            <label>Langue</label>
+            <select id="language">
+              <option value="fr">Français</option>
+              <option value="en">English</option>
+            </select>
+          </div>
+        </div>
+        <div class="modalFooter">
+          <button id="btnSaveSettings" class="cta ctaSmall">Enregistrer</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="renderer.js"></script>
+</body>
 </html>

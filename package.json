@@ -15,7 +15,7 @@
   "type": "commonjs",
   "main": "dist/main/main.js",
   "scripts": {
-    "build": "tsc && cp src/renderer/index.html dist/renderer/index.html",
+    "build": "tsc && cp src/renderer/index.html dist/renderer/index.html && mkdir -p dist/renderer/styles && cp src/renderer/styles/main.css dist/renderer/styles/main.css && mkdir -p dist/renderer/assets && cp src/renderer/assets/bg.jpg dist/renderer/assets/bg.jpg",
     "start": "npm run build && electron .",
     "package": "npm run build && electron-builder"
   },
@@ -26,5 +26,13 @@
     "typescript": "^5.9.3",
     "webpack": "^5.105.0",
     "webpack-cli": "^6.0.1"
+  },
+  "dependencies": {
+    "@types/adm-zip": "^0.5.7",
+    "@types/node-fetch": "^2.6.13",
+    "adm-zip": "^0.5.16",
+    "minecraft-launcher-core": "^3.18.2",
+    "msmc": "^3.1.5",
+    "node-fetch": "^2.7.0"
   }
 }

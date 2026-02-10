@@ -18,17 +18,18 @@
     "build": "tsc && cp src/renderer/index.html dist/renderer/index.html && mkdir -p dist/renderer/styles && cp src/renderer/styles/main.css dist/renderer/styles/main.css && mkdir -p dist/renderer/assets && cp src/renderer/assets/bg.jpg dist/renderer/assets/bg.jpg",
     "start": "npm run build && electron .",
     "package": "npm run build && electron-builder",
-    "publish": "npm run build && electron-builder --publish always"
+    "package:mac": "npm run build && electron-builder --mac",
+    "package:win": "npm run build && electron-builder --win",
+    "package:all": "npm run build && electron-builder --mac --win"
   },
   "build": {
     "appId": "com.blocks-and-blades.launcher",
-    "productName": "Blocks & Blades Launcher",
+    "productName": "BlocksAndBladesLauncher",
     "directories": {
       "output": "dist-build"
     },
     "files": [
       "dist/**/*",
-      "node_modules/**/*",
       "package.json"
     ],
     "publish": [
@@ -39,6 +40,7 @@
       }
     ],
     "mac": {
+      "artifactName": "BlocksAndBladesLauncher-Mac.${ext}",
       "category": "public.app-category.games",
       "target": [
         "dmg",
@@ -46,6 +48,7 @@
       ]
     },
     "win": {
+      "artifactName": "BlocksAndBladesLauncher.${ext}",
       "target": [
         "portable",
         "nsis"

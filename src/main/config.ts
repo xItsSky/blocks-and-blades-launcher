@@ -13,7 +13,6 @@ export default {
   server: {
     host: "blocks-and-blades.nitro.games",
     port: 26365,
-    statusPort: 26365,
     autoConnect: {
       enabled: true
     },

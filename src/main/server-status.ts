@@ -18,7 +18,7 @@ async function resolveMinecraftSrv(host: string): Promise<{ host: string; port: 
 
 export async function getServerStatus(): Promise<boolean> {
   let targetHost = config.server.host;
-  let targetPort = config.server.statusPort;
+  let targetPort = config.server.port;
 
   // Tentative de résolution SRV pour être plus robuste
   try {

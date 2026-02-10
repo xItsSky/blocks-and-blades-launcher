@@ -17,7 +17,44 @@
   "scripts": {
     "build": "tsc && cp src/renderer/index.html dist/renderer/index.html && mkdir -p dist/renderer/styles && cp src/renderer/styles/main.css dist/renderer/styles/main.css && mkdir -p dist/renderer/assets && cp src/renderer/assets/bg.jpg dist/renderer/assets/bg.jpg",
     "start": "npm run build && electron .",
-    "package": "npm run build && electron-builder"
+    "package": "npm run build && electron-builder",
+    "publish": "npm run build && electron-builder --publish always"
+  },
+  "build": {
+    "appId": "com.blocks-and-blades.launcher",
+    "productName": "Blocks & Blades Launcher",
+    "directories": {
+      "output": "dist-build"
+    },
+    "files": [
+      "dist/**/*",
+      "node_modules/**/*",
+      "package.json"
+    ],
+    "publish": [
+      {
+        "provider": "github",
+        "owner": "xItsSky",
+        "repo": "blocks-and-blades-launcher"
+      }
+    ],
+    "mac": {
+      "category": "public.app-category.games",
+      "target": [
+        "dmg",
+        "zip"
+      ]
+    },
+    "win": {
+      "target": [
+        "portable",
+        "nsis"
+      ]
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true
+    }
   },
   "devDependencies": {
     "electron": "^40.2.1",

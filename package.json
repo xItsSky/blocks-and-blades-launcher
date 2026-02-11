@@ -1,6 +1,6 @@
 {
   "name": "blocks-and-blades-launcher",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "the launcher of the blocks and blades minecraft server",
   "homepage": "https://github.com/xItsSky/blocks-and-blades-launcher#readme",
   "bugs": {
@@ -15,7 +15,7 @@
   "type": "commonjs",
   "main": "dist/main/main.js",
   "scripts": {
-    "build": "tsc && cp src/renderer/index.html dist/renderer/index.html && mkdir -p dist/renderer/styles && cp src/renderer/styles/main.css dist/renderer/styles/main.css && mkdir -p dist/renderer/assets && cp src/renderer/assets/bg.jpg dist/renderer/assets/bg.jpg",
+    "build": "tsc && mkdir -p dist/renderer/styles dist/renderer/assets && cp src/renderer/index.html dist/renderer/index.html && cp src/renderer/styles/main.css dist/renderer/styles/main.css && cp src/renderer/assets/bg.jpg dist/renderer/assets/bg.jpg && (cp build/icon.png dist/renderer/assets/icon.png || cp build/icon.ico dist/renderer/assets/icon.png || true) && (cp build/icon.icns dist/renderer/assets/icon.icns || true) && (cp build/icon.ico dist/renderer/assets/icon.ico || true)",
     "start": "npm run build && electron .",
     "package": "npm run build && electron-builder",
     "package:mac": "npm run build && electron-builder --mac",
@@ -26,11 +26,16 @@
     "appId": "com.blocks-and-blades.launcher",
     "productName": "BlocksAndBladesLauncher",
     "directories": {
-      "output": "dist-build"
+      "output": "dist-build",
+      "buildResources": "build"
     },
     "files": [
       "dist/**/*",
       "package.json"
+    ],
+    "asar": true,
+    "asarUnpack": [
+      "**/node_modules/minecraft-launcher-core/**/*"
     ],
     "publish": [
       {
@@ -40,6 +45,7 @@
       }
     ],
     "mac": {
+      "icon": "build/icon.icns",
       "artifactName": "BlocksAndBladesLauncher-Mac.${ext}",
       "category": "public.app-category.games",
       "target": [
@@ -48,15 +54,16 @@
       ]
     },
     "win": {
+      "icon": "build/icon.ico",
       "artifactName": "BlocksAndBladesLauncher.${ext}",
       "target": [
-        "portable",
-        "nsis"
+        {
+          "target": "portable",
+          "arch": [
+            "x64"
+          ]
+        }
       ]
-    },
-    "nsis": {
-      "oneClick": false,
-      "allowToChangeInstallationDirectory": true
     }
   },
   "devDependencies": {

@@ -7,6 +7,8 @@ import config from './config';
 import { MinecraftAuthData } from './auth';
 import { loadSettings } from './settings';
 import { getTranslation } from './i18n';
+import { logger } from './logger';
+import { handleJavaCrash } from './setup';
 
 async function downloadNeoForgeInstaller(version: string, rootDir: string): Promise<string> {
     const installerName = `neoforge-${version}-installer.jar`;
@@ -54,6 +56,7 @@ export async function installAndLaunchMinecraft(onProgress: (percent: number, me
             user_properties: {}
         },
         root: rootDir,
+        javaPath: settings.java.javaPath, // Ajout du chemin Java personnalisé
         version: {
             number: config.setup.minecraftVersion,
             type: "release"
@@ -69,15 +72,17 @@ export async function installAndLaunchMinecraft(onProgress: (percent: number, me
         } : undefined
     };
 
-    launcher.on('debug', (e) => console.log(`[MC-DEBUG] ${e}`));
-    launcher.on('data', (e) => console.log(`[MC-DATA] ${e}`));
+    logger.info(`Minecraft launch options: version=${opts.version.number}, maxRam=${opts.memory.max}, minRam=${opts.memory.min}, root=${opts.root}, javaPath=${opts.javaPath || 'default'}`);
+
+    launcher.on('debug', (e) => logger.info(`[MC-DEBUG] ${e}`));
+    launcher.on('data', (e) => logger.info(`[MC-DATA] ${e}`));
     launcher.on('progress', (e) => {
         const percent = (e.task / e.total) * 100;
         onProgress(percent, getTranslation(lang, 'setupDownloadingResources', { type: e.type }));
     });
 
     try {
-        console.log(downloadOnly ? "Starting Minecraft installation (download only)..." : "Starting Minecraft launch...");
+        logger.info(downloadOnly ? "Starting Minecraft installation (download only)..." : "Starting Minecraft launch...");
         
         if (downloadOnly) {
             // Pour installer sans lancer, on utilise launch et on tue le process
@@ -85,15 +90,31 @@ export async function installAndLaunchMinecraft(onProgress: (percent: number, me
             const launcherProcess = await launcher.launch(opts as any);
             
             if (launcherProcess) {
-                console.log("Game process started during setup, killing it as we only wanted to install.");
+                logger.info("Game process started during setup, killing it as we only wanted to install.");
                 launcherProcess.kill();
             }
         } else {
-            await launcher.launch(opts as any);
+            const startTime = Date.now();
+            const launcherProcess = await launcher.launch(opts as any);
+            if (launcherProcess) {
+                launcherProcess.on('close', (code) => {
+                    const duration = Date.now() - startTime;
+                    logger.info(`Minecraft process closed with code ${code} after ${duration}ms`);
+                    
+                    // Si le jeu se ferme avec une erreur (souvent code 1) très rapidement après le lancement
+                    // c'est généralement un problème de Java.
+                    if (code !== 0 && code !== null && duration < 10000) {
+                        handleJavaCrash();
+                    }
+                });
+                launcherProcess.on('error', (err) => {
+                    logger.error(`Minecraft process error: ${err.message}`);
+                });
+            }
         }
         
     } catch (error) {
-        console.error("Minecraft setup failed:", error);
+        logger.error(`Minecraft setup failed: ${error}`);
         throw error;
     }
 }

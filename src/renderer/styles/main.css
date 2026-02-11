@@ -566,7 +566,8 @@ body {
   color: var(--muted);
 }
 
-.settingGroup select {
+.settingGroup select,
+.settingGroup input[type="text"] {
   background: rgba(255, 255, 255, 0.05);
   border: 1px solid rgba(255, 255, 255, 0.15);
   border-radius: 8px;
@@ -575,9 +576,15 @@ body {
   font-size: 14px;
   outline: none;
   cursor: pointer;
+  width: 100%;
 }
 
-.settingGroup select:focus {
+.settingGroup input[type="text"] {
+  cursor: text;
+}
+
+.settingGroup select:focus,
+.settingGroup input[type="text"]:focus {
   border-color: var(--gold);
 }
 

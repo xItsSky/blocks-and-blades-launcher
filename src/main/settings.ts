@@ -9,6 +9,7 @@ export interface UserSettings {
     java: {
         minRam: string;
         maxRam: string;
+        javaPath?: string;
     };
     launcher: {
         minimizeOnLaunch: boolean;

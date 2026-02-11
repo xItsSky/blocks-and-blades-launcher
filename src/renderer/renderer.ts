@@ -72,6 +72,7 @@
     const btnSaveSettings = document.getElementById("btnSaveSettings") as HTMLButtonElement;
 
     const maxRamSelect = document.getElementById("maxRam") as HTMLSelectElement;
+    const javaPathInput = document.getElementById("javaPath") as HTMLInputElement;
     const minimizeOnLaunchCheckbox = document.getElementById("minimizeOnLaunch") as HTMLInputElement;
     const languageSelect = document.getElementById("language") as HTMLSelectElement;
 
@@ -83,6 +84,8 @@
         loginWithMicrosoft: "Se connecter avec Microsoft",
         readyToForge: "Prêt à forger votre destinée.",
         settingsTitle: "Réglages",
+        javaPathLabel: "Chemin Java (Optionnel)",
+        javaPathPlaceholder: "Utiliser le Java par défaut",
         maxRamLabel: "RAM Maximale",
         minimizeLabel: "Minimiser au lancement",
         languageLabel: "Langue",
@@ -108,6 +111,8 @@
         loginWithMicrosoft: "Sign in with Microsoft",
         readyToForge: "Ready to forge your destiny.",
         settingsTitle: "Settings",
+        javaPathLabel: "Java Path (Optional)",
+        javaPathPlaceholder: "Use default Java",
         maxRamLabel: "Maximum RAM",
         minimizeLabel: "Minimize on launch",
         languageLabel: "Language",
@@ -137,9 +142,10 @@
       const loginBtnText = btnLogin?.querySelector(".ctaInner")?.lastChild;
       const userStatus = document.querySelector(".userStatus");
       const settingsTitle = document.querySelector(".modalHeader h2");
-      const maxRamLabel = document.querySelector(".settingGroup:nth-child(1) label");
-      const minimizeLabel = document.querySelector(".settingGroup:nth-child(2) label");
-      const languageLabel = document.querySelector(".settingGroup:nth-child(3) label");
+      const javaPathLabel = document.getElementById("javaPathLabel");
+      const maxRamLabel = document.getElementById("maxRamLabel");
+      const minimizeLabel = document.querySelector(".settingGroup:nth-child(3) label");
+      const languageLabel = document.querySelector(".settingGroup:nth-child(4) label");
 
       const heroTitle = document.getElementById("heroTitle");
       const heroTagline = document.getElementById("heroTagline");
@@ -172,6 +178,8 @@
       
       if (userStatus) userStatus.textContent = t.readyToForge;
       if (settingsTitle) settingsTitle.textContent = t.settingsTitle;
+      if (javaPathLabel) javaPathLabel.textContent = t.javaPathLabel;
+      if (javaPathInput) javaPathInput.placeholder = t.javaPathPlaceholder;
       if (maxRamLabel) maxRamLabel.textContent = t.maxRamLabel;
       if (minimizeLabel && minimizeLabel.lastChild) minimizeLabel.lastChild.textContent = ` ${t.minimizeLabel}`;
       if (languageLabel) languageLabel.textContent = t.languageLabel;
@@ -188,6 +196,7 @@
       // @ts-ignore
       const settings = await window.electronAPI.getSettings();
       if (maxRamSelect) maxRamSelect.value = settings.java.maxRam;
+      if (javaPathInput) javaPathInput.value = settings.java.javaPath || "";
       if (minimizeOnLaunchCheckbox) minimizeOnLaunchCheckbox.checked = settings.launcher.minimizeOnLaunch;
       if (languageSelect) languageSelect.value = settings.launcher.language;
       
@@ -213,7 +222,8 @@
         const settings = {
           java: {
             minRam: "2G", // Default min
-            maxRam: maxRamSelect.value
+            maxRam: maxRamSelect.value,
+            javaPath: javaPathInput.value.trim() || undefined
           },
           launcher: {
             minimizeOnLaunch: minimizeOnLaunchCheckbox.checked,

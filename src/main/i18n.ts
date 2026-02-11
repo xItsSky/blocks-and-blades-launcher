@@ -42,7 +42,11 @@ export const translations: Record<string, any> = {
     javaMissingTitle: "Java manquant",
     javaMissingMessage: "Java n'est pas installé sur votre système. Java est requis pour lancer Minecraft.",
     javaDownloadBtn: "Télécharger Java",
-    javaQuitBtn: "Quitter"
+    javaQuitBtn: "Quitter",
+    javaCrashTitle: "Erreur de lancement",
+    javaCrashMessage: "Le jeu a crashé immédiatement après le lancement. Cela est souvent dû à une version de Java incompatible (Java 21 requis).",
+    javaCrashDetail: "Si vous avez déjà installé Java 21, vous pouvez spécifier son chemin dans les réglages du launcher.",
+    javaDownload21Btn: "Télécharger Java 21"
   },
   en: {
     // UI
@@ -87,7 +91,11 @@ export const translations: Record<string, any> = {
     javaMissingTitle: "Java Missing",
     javaMissingMessage: "Java is not installed on your system. Java is required to launch Minecraft.",
     javaDownloadBtn: "Download Java",
-    javaQuitBtn: "Quit"
+    javaQuitBtn: "Quit",
+    javaCrashTitle: "Launch Error",
+    javaCrashMessage: "The game crashed immediately after launch. This is often due to an incompatible Java version (Java 21 required).",
+    javaCrashDetail: "If you have already installed Java 21, you can specify its path in the launcher settings.",
+    javaDownload21Btn: "Download Java 21"
   }
 };
 

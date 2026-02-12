@@ -1,10 +1,10 @@
 export default {
-  launcherVersion: "1.1.1",
+  launcherVersion: "1.1.2",
 
   gameFolderName: ".blocks-and-blades",
 
   setup: {
-    basePackageUrl: "https://pub-8cc4941d55dd48c48872461fb8913431.r2.dev/blocks-and-blades-1.0.0.zip",
+    basePackageUrl: "https://pub-8cc4941d55dd48c48872461fb8913431.r2.dev/blocks-and-blades-1.1.0.zip",
     manifestUrl: "https://pub-8cc4941d55dd48c48872461fb8913431.r2.dev/manifest.json",
     minecraftVersion: "1.21.1",
     neoforgeVersion: "21.1.219"

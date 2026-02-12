@@ -6,7 +6,7 @@ import config from './config';
 import { SetupManager, checkJava, handleMissingJava } from './setup';
 import { setupBasePackage } from './base-package';
 import { installAndLaunchMinecraft } from './minecraft-installer';
-import { loginMicrosoft, saveTokens, loadTokens, clearTokens } from './auth';
+import { loginMicrosoft, saveTokens, loadTokens, clearTokens, validateAndRefreshAuth } from './auth';
 import { loadSettings, saveSettings } from './settings';
 import { getTranslation } from './i18n';
 import { logger } from './logger';
@@ -105,7 +105,26 @@ function createWindow() {
     // Check for saved tokens
     currentAuth = loadTokens();
     if (currentAuth) {
+        // Envoie du pseudo immédiat pour l'UI
         mainWindow.webContents.send('auth-success', currentAuth.name, currentAuth.uuid);
+        
+        // Validation et rafraîchissement en tâche de fond
+        validateAndRefreshAuth(currentAuth).then(refreshed => {
+            if (refreshed) {
+                currentAuth = refreshed;
+                saveTokens(currentAuth);
+                // Mise à jour si nécessaire
+                mainWindow.webContents.send('auth-success', currentAuth.name, currentAuth.uuid);
+            } else {
+                logger.info("Session expired and could not be refreshed.");
+                currentAuth = null;
+                clearTokens();
+                mainWindow.webContents.send('auth-failed');
+            }
+        }).catch(err => {
+            logger.error(`Error during token validation: ${err}`);
+            mainWindow.webContents.send('auth-failed');
+        });
     }
 
     const settings = loadSettings();
@@ -145,6 +164,18 @@ function createWindow() {
           ipcMain.handle('launch-game', async (event, rememberMe: boolean) => {
              // Cette fonction sera utilisée par le bouton de connexion après le setup
              try {
+                if (currentAuth) {
+                    // Vérification finale avant de lancer
+                    const refreshed = await validateAndRefreshAuth(currentAuth);
+                    if (refreshed) {
+                        currentAuth = refreshed;
+                        if (rememberMe) saveTokens(currentAuth);
+                    } else {
+                        currentAuth = null;
+                        clearTokens();
+                    }
+                }
+
                 if (!currentAuth) {
                     currentAuth = await loginMicrosoft(mainWindow);
                     if (currentAuth && rememberMe) {
@@ -207,6 +238,12 @@ ipcMain.handle('get-settings', () => {
 
 ipcMain.handle('save-settings', (event, settings) => {
   saveSettings(settings);
+});
+
+ipcMain.handle('logout', () => {
+  logger.info("User logged out.");
+  currentAuth = null;
+  clearTokens();
 });
 
 process.on('uncaughtException', (error) => {

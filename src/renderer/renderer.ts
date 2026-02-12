@@ -65,6 +65,22 @@
       }
     });
 
+    // @ts-ignore
+    window.electronAPI.onAuthFailed(() => {
+      const userProfile = document.getElementById("userProfile");
+      if (userProfile) userProfile.classList.add("hidden");
+      
+      if (btnLogin) {
+        btnLogin.id = "btnLogin";
+        btnLogin.disabled = false;
+        // Update text via language
+        // @ts-ignore
+        window.electronAPI.getSettings().then(settings => {
+          applyLanguage(settings.launcher.language);
+        });
+      }
+    });
+
     // Settings logic
     const settingsModal = document.getElementById("settingsModal");
     const btnOpenSettings = document.getElementById("btnOpenSettings");
@@ -97,6 +113,7 @@
         offline: "Hors ligne",
         error: "Erreur",
         play: " Jouer",
+        logout: "Déconnexion",
         heroTitle: "Rejoins <span>Valdoryn</span>.",
         heroTagline: "Choisi ta classe, nettoie les dongeons et affronte les boss qui se trouverons devant toi. Forges ta légende !",
         chipClasses: "⚔️ Classes & builds",
@@ -124,6 +141,7 @@
         offline: "Offline",
         error: "Error",
         play: " Play",
+        logout: "Logout",
         heroTitle: "Join <span>Valdoryn</span>.",
         heroTagline: "Choose your class, clear dungeons and face the bosses that stand before you. Forge your legend!",
         chipClasses: "⚔️ Classes & builds",
@@ -184,6 +202,9 @@
       if (minimizeLabel && minimizeLabel.lastChild) minimizeLabel.lastChild.textContent = ` ${t.minimizeLabel}`;
       if (languageLabel) languageLabel.textContent = t.languageLabel;
       if (btnSaveSettings) btnSaveSettings.textContent = t.saveBtn;
+
+      const btnLogout = document.getElementById("btnLogout");
+      if (btnLogout) btnLogout.title = t.logout;
       
       // Update server status text if it's already loaded
       if (serverPill) {
@@ -321,6 +342,25 @@
           if (isPlayMode && ctaInner.lastChild) {
             ctaInner.lastChild.textContent = originalText;
           }
+        }
+      });
+    }
+
+    const btnLogout = document.getElementById("btnLogout") as HTMLButtonElement;
+    if (btnLogout) {
+      btnLogout.addEventListener("click", async () => {
+        // @ts-ignore
+        await window.electronAPI.logout();
+        
+        // UI Reset
+        const userProfile = document.getElementById("userProfile");
+        if (userProfile) userProfile.classList.add("hidden");
+        
+        if (btnLogin) {
+          btnLogin.id = "btnLogin";
+          // @ts-ignore
+          const settings = await window.electronAPI.getSettings();
+          applyLanguage(settings.launcher.language);
         }
       });
     }

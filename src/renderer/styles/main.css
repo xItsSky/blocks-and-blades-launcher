@@ -323,12 +323,43 @@ body {
   display: flex;
   flex-direction: column;
   gap: 2px;
+  flex: 1;
+}
+
+.userHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
 }
 
 .userName {
   font-weight: 800;
   font-size: 15px;
   color: var(--ink);
+}
+
+.logoutBtn {
+  background: transparent;
+  border: 0;
+  color: var(--muted);
+  padding: 4px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 6px;
+  transition: all 0.2s ease;
+}
+
+.logoutBtn:hover {
+  background: rgba(239, 68, 68, 0.15);
+  color: #f87171;
+}
+
+.logoutBtn svg {
+  width: 14px;
+  height: 14px;
 }
 
 .userStatus {

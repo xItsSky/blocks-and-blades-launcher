@@ -3,6 +3,7 @@ import { BrowserWindow } from 'electron';
 import * as fs from 'fs';
 import * as path from 'path';
 import { getGameRoot } from './game-path';
+import { logger } from './logger';
 
 export interface MinecraftAuthData {
     access_token: string;
@@ -10,6 +11,12 @@ export interface MinecraftAuthData {
     uuid: string;
     name: string;
     user_properties?: any;
+    meta?: {
+        xuid?: string;
+        type: "mojang" | "xbox" | any;
+        demo?: boolean;
+    };
+    _msmc?: any;
 }
 
 export async function loginMicrosoft(window: BrowserWindow): Promise<MinecraftAuthData> {
@@ -21,19 +28,32 @@ export async function loginMicrosoft(window: BrowserWindow): Promise<MinecraftAu
             throw new Error(`Login failed or was cancelled: ${result.type}`);
         }
 
-        const profile = result.profile;
-        if (!profile) throw new Error("No profile found");
-
-        return {
-            access_token: result.access_token || "",
-            client_token: "", // msmc doesn't seem to provide a client_token directly in result
-            uuid: profile.id,
-            name: profile.name,
-            user_properties: {}
-        };
+        return msmc.getMCLC().getAuth(result) as MinecraftAuthData;
     } catch (err) {
         console.error("Microsoft login failed:", err);
         throw err;
+    }
+}
+
+export async function validateAndRefreshAuth(data: MinecraftAuthData): Promise<MinecraftAuthData | null> {
+    try {
+        const mclc = msmc.getMCLC();
+        const isValid = await mclc.validate(data);
+        
+        if (isValid) {
+            logger.info("Minecraft session is still valid.");
+            return data;
+        }
+
+        logger.info("Minecraft session expired or invalid, attempting refresh...");
+        const refreshed = await mclc.refresh(data);
+        if (refreshed) {
+            logger.info("Minecraft session successfully refreshed.");
+        }
+        return refreshed as MinecraftAuthData;
+    } catch (err: any) {
+        logger.error(`Failed to refresh Minecraft session: ${err.message || err}`);
+        return null;
     }
 }
 

@@ -5,7 +5,6 @@ jspm_packages/
 # Build outputs
 dist/
 out/
-build/
 *.exe
 *.dmg
 *.app

@@ -26,21 +26,15 @@ function createWindow() {
     ? path.join(__dirname, '../renderer/index.html')
     : path.join(__dirname, '../renderer/index.html');
 
-  let iconPath = isDev
-    ? path.join(__dirname, '../../build/icon.png')
-    : path.join(__dirname, '../renderer/assets/icon.png');
+  let iconPath = path.join(__dirname, '../renderer/assets/icon.png');
 
   if (process.platform === 'win32') {
-    const winIcon = isDev
-      ? path.join(__dirname, '../../build/icon.ico')
-      : path.join(__dirname, '../renderer/assets/icon.ico');
+    const winIcon = path.join(__dirname, '../renderer/assets/icon.ico');
     if (fs.existsSync(winIcon)) {
       iconPath = winIcon;
     }
   } else if (process.platform === 'darwin') {
-    const macIcon = isDev 
-      ? path.join(__dirname, '../../build/icon.icns')
-      : path.join(__dirname, '../renderer/assets/icon.icns');
+    const macIcon = path.join(__dirname, '../renderer/assets/icon.icns');
     if (fs.existsSync(macIcon)) {
       iconPath = macIcon;
     }

@@ -15,7 +15,7 @@
   "type": "commonjs",
   "main": "dist/main/main.js",
   "scripts": {
-    "build": "tsc && mkdir -p dist/renderer/styles dist/renderer/assets && cp src/renderer/index.html dist/renderer/index.html && cp src/renderer/styles/main.css dist/renderer/styles/main.css && cp src/renderer/assets/bg.jpg dist/renderer/assets/bg.jpg && cp build/icon.png dist/renderer/assets/icon.png && cp build/icon.ico dist/renderer/assets/icon.ico && cp build/icon.icns dist/renderer/assets/icon.icns",
+    "build": "tsc && mkdir -p dist/renderer/styles dist/renderer/assets && cp src/renderer/index.html dist/renderer/index.html && cp src/renderer/styles/main.css dist/renderer/styles/main.css && cp -r src/renderer/assets/* dist/renderer/assets/",
     "start": "npm run build && electron .",
     "package": "npm run build && electron-builder",
     "package:mac": "npm run build && electron-builder --mac",
@@ -27,7 +27,7 @@
     "productName": "BlocksAndBladesLauncher",
     "directories": {
       "output": "dist-build",
-      "buildResources": "build"
+      "buildResources": "src/renderer/assets"
     },
     "icon": "icon.png",
     "files": [

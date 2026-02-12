@@ -17,10 +17,11 @@
   "scripts": {
     "build": "tsc && mkdir -p dist/renderer/styles dist/renderer/assets && cp src/renderer/index.html dist/renderer/index.html && cp src/renderer/styles/main.css dist/renderer/styles/main.css && cp -r src/renderer/assets/* dist/renderer/assets/",
     "start": "npm run build && electron .",
-    "package": "npm run build && electron-builder",
-    "package:mac": "npm run build && electron-builder --mac",
-    "package:win": "npm run build && electron-builder --win",
-    "package:all": "npm run build && electron-builder --mac --win"
+    "package": "npm run build && electron-builder --publish never",
+    "package:mac": "npm run build && electron-builder --mac --publish never",
+    "package:win": "npm run build && electron-builder --win --publish never",
+    "package:all": "npm run build && electron-builder --mac --publish never && electron-builder --win --publish never",
+    "release": "npm run build && electron-builder --mac --win --publish always"
   },
   "build": {
     "appId": "com.blocks-and-blades.launcher",

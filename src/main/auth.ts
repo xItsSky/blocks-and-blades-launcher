@@ -1,5 +1,5 @@
 import * as msmc from 'msmc';
-import { BrowserWindow } from 'electron';
+import { BrowserWindow, safeStorage } from 'electron';
 import * as fs from 'fs';
 import * as path from 'path';
 import { getGameRoot } from './game-path';
@@ -65,7 +65,19 @@ export function saveTokens(data: MinecraftAuthData) {
     if (!fs.existsSync(rootDir)) {
         fs.mkdirSync(rootDir, { recursive: true });
     }
-    fs.writeFileSync(tokenPath, JSON.stringify(data));
+    
+    try {
+        const jsonString = JSON.stringify(data);
+        if (safeStorage.isEncryptionAvailable()) {
+            const encryptedData = safeStorage.encryptString(jsonString);
+            fs.writeFileSync(tokenPath, encryptedData);
+        } else {
+            logger.warn("Encryption is not available. Saving tokens in plain text.");
+            fs.writeFileSync(tokenPath, jsonString);
+        }
+    } catch (e: any) {
+        logger.error(`Failed to save tokens securely: ${e.message || e}`);
+    }
 }
 
 export function loadTokens(): MinecraftAuthData | null {
@@ -73,8 +85,24 @@ export function loadTokens(): MinecraftAuthData | null {
     const tokenPath = path.join(rootDir, TOKEN_FILE);
     if (fs.existsSync(tokenPath)) {
         try {
-            return JSON.parse(fs.readFileSync(tokenPath, 'utf-8'));
-        } catch (e) {
+            const fileData = fs.readFileSync(tokenPath);
+            let jsonString: string;
+            
+            // On essaie de déchiffrer, si ça échoue on essaie de lire tel quel (pour la transition)
+            if (safeStorage.isEncryptionAvailable()) {
+                try {
+                    jsonString = safeStorage.decryptString(fileData);
+                } catch (e) {
+                    // Si le déchiffrement échoue, c'est peut-être un ancien fichier non chiffré
+                    jsonString = fileData.toString('utf-8');
+                }
+            } else {
+                jsonString = fileData.toString('utf-8');
+            }
+            
+            return JSON.parse(jsonString);
+        } catch (e: any) {
+            logger.error(`Failed to load tokens: ${e.message || e}`);
             return null;
         }
     }

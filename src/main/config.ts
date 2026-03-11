@@ -1,5 +1,5 @@
 export default {
-  launcherVersion: "1.2.0",
+  launcherVersion: "2.0.0",
 
   gameFolderName: ".blocks-and-blades",
 
